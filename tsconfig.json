@@ -15,5 +15,5 @@
     "resources/**/*.d.ts",
     "resources/**/*.vue",
     "resources/js/app.js"
-  ]
+, "resources/js/bootstrap.js"  ]
 }

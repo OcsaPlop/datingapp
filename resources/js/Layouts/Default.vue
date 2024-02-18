@@ -1,11 +1,11 @@
 <script setup lang="ts"></script>
 <template>
-  <div class="drawer drawer-open">
+  <div class="drawer xl:drawer-open bg-default">
     <input id="my-drawer" type="checkbox" class="drawer-toggle" />
-    <div class="drawer-content">
+    <div class="drawer-content h-screen">
       <slot />
     </div>
-    <div class="drawer-side glass">
+    <div class="drawer-side xl:glass">
       <div class="flex justify-center p-4">
         <img :src="'/logo.png'" class="w-24 rounded-full" />
       </div>
@@ -32,16 +32,6 @@
             class="btn justify-start"
             :class="$page.component === 'Profile' ? 'btn-primary' : 'btn-ghost'"
             >Profil</Link
-          >
-        </li>
-        <li>
-          <Link
-            href="/settings"
-            class="btn justify-start"
-            :class="
-              $page.component === 'Settings' ? 'btn-primary' : 'btn-ghost'
-            "
-            >Pengaturan</Link
           >
         </li>
         <li>

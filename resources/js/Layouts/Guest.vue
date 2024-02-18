@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-login h-screen bg-cover">
+  <div class="bg-guest h-screen bg-cover">
     <slot />
   </div>
 </template>

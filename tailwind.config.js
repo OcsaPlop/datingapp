@@ -10,8 +10,8 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        login:
-          "url('https://i.pximg.net/img-original/img/2020/09/10/21/38/10/84283947_p0.jpg')",
+        guest: "url('http://localhost:8000/guest.jpg')",
+        default: "url('http://localhost:8000/default.png')",
       },
     },
   },
@@ -21,7 +21,7 @@ export default {
       {
         theme: {
           primary: '#ee6c9b',
-          secondary: '#f6d860',
+          secondary: '#090b10',
           accent: '#37cdbe',
           neutral: '#3d4451',
           'base-100': '#313338',

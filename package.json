@@ -20,6 +20,8 @@
     },
     "dependencies": {
         "@inertiajs/vue3": "^1.0.14",
-        "@vueuse/core": "^10.7.2"
+        "@vueuse/core": "^10.7.2",
+        "laravel-echo": "^1.15.3",
+        "pusher-js": "^8.4.0-rc2"
     }
 }

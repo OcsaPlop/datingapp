@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { User } from '../Types'
 import { useForm } from '@inertiajs/vue3'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useToggle, useDateFormat } from '@vueuse/core'
 import Location from '../Icons/Location.vue'
 import Male from '../Icons/Male.vue'
@@ -14,29 +14,31 @@ import Email from '../Icons/Email.vue'
 import Person from '../Icons/Person.vue'
 import Religion from '../Icons/Religion.vue'
 import Love from '../Icons/Love.vue'
-
-const { user } = defineProps<{
+import formatText from '../Utils/formatText'
+const props = defineProps<{
   user: User
 }>()
 
+const user = computed(() => props.user.data)
+
 const form: any = useForm({
-  name: user.name,
-  address: user.address,
-  gender: user.gender ? user.gender : '',
-  birth: user.birth,
-  height: user.height,
-  weight: user.weight,
-  phoneNumber: user.phoneNumber,
-  username: user.username,
-  religion: user.religion,
-  loveLanguage: user.loveLanguage,
+  name: user.value.name,
+  address: user.value.address,
+  gender: user.value.gender ? user.value.gender : '',
+  birth: user.value.birth,
+  height: user.value.height,
+  weight: user.value.weight,
+  phoneNumber: user.value.phoneNumber,
+  username: user.value.username,
+  religion: user.value.religion,
+  loveLanguage: user.value.loveLanguage,
   avatar: null,
-  bio: user.bio,
+  bio: user.value.bio,
 })
 
 const [isEditing, toggleEditing] = useToggle(false)
 const fileInputEl = ref<any>()
-const imagePreviewUrl = ref<string>(user.avatar)
+const imagePreviewUrl = ref<string>(user.value.avatar)
 const handleFileInput = () => {
   if (
     !['image/png', 'image/jpeg', 'image/webp'].includes(
@@ -55,9 +57,9 @@ const openfileInputEl = () => {
 }
 </script>
 <template>
-  <div class="flex gap-32 p-16">
+  <div class="flex justify-around items-center h-full">
     <div class="card card-compact w-96 shrink-0 shadow-xl glass">
-      <div class="card-body space-y-4">
+      <div class="card-body space-y-2">
         <template v-if="!isEditing">
           <div class="avatar">
             <div class="rounded-xl w-96">
@@ -94,7 +96,9 @@ const openfileInputEl = () => {
                 : 'Tanggal lahir'
             }}</span>
           </label>
-          <button class="btn btn-primary" @click="toggleEditing()">Edit</button>
+          <button class="btn btn-primary mt-4" @click="toggleEditing()">
+            Edit
+          </button>
         </template>
         <template v-else>
           <div class="avatar" @click="openfileInputEl()">
@@ -109,13 +113,6 @@ const openfileInputEl = () => {
             accept=".jpg, .jpeg, .png, .webp"
             class="hidden"
           />
-          <progress
-            v-if="form.progress"
-            :value="form.progress.percentage"
-            max="100"
-          >
-            {{ form.progress.percentage }}%
-          </progress>
           <input
             class="input input-primary"
             v-model="form.name"
@@ -142,7 +139,7 @@ const openfileInputEl = () => {
             <Calender />
             <input type="date" class="grow" v-model="form.birth" />
           </label>
-          <div class="join flex">
+          <div class="join flex mt-4">
             <button
               class="btn btn-error join-item w-1/2"
               @click="
@@ -162,8 +159,8 @@ const openfileInputEl = () => {
         </template>
       </div>
     </div>
-    <div class="card card-compact w-96 shrink-0 shadow-xl glass">
-      <div class="card-body space-y-4">
+    <div class="card card-compact w-96 shadow-xl glass">
+      <div class="card-body space-y-2 my-1">
         <template v-if="!isEditing">
           <label class="input input-bordered flex items-center gap-2">
             <Person />
@@ -198,8 +195,8 @@ const openfileInputEl = () => {
             <span class="grow">{{ user.loveLanguage || 'Bahasa cinta' }} </span>
           </label>
           <div
-            class="textarea textarea-bordered h-52"
-            v-html="user.bio"
+            class="textarea textarea-bordered"
+            v-html="formatText(user.bio)"
             v-if="user.bio"
           />
           <div class="textarea textarea-bordered h-52" v-else>Bio</div>
@@ -282,3 +279,4 @@ const openfileInputEl = () => {
     </div>
   </div>
 </template>
+../Utils/formatText
