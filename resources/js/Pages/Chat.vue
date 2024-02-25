@@ -4,7 +4,7 @@ import axios from 'axios'
 import type { User, Messages, Auth } from '../Types'
 import Send from '../Icons/Send.vue'
 import formatText from '../Utils/formatText'
-import { useDateFormat } from '@vueuse/core'
+import { useDateFormat, useScroll, useWindowScroll } from '@vueuse/core'
 
 const props = defineProps<{
   user: User
@@ -28,11 +28,17 @@ const submit = async () => {
   }
 }
 
+const messagesContainer = ref()
+const { y } = useScroll(messagesContainer)
 onMounted(() => {
   //@ts-ignore
-  Echo.private(`chat.${props.auth.user.data.id}`).listen('SendMessage', (e) => {
-    messages.value.push(e.message)
-  })
+  Echo.private(`chat.${props.auth.user.data.id}`).listen(
+    'SendMessage',
+    async (e) => {
+      await messages.value.push(e.message)
+      y.value = messagesContainer.value.scrollTopMax
+    },
+  )
 })
 onUnmounted(() => {
   //@ts-ignore
@@ -40,8 +46,8 @@ onUnmounted(() => {
 })
 </script>
 <template>
-  <div class="flex flex-col h-full">
-    <div class="navbar glass gap-4">
+  <div class="flex flex-col max-h-screen">
+    <div class="navbar glass gap-4 top-0 z-10">
       <div class="avatar">
         <div class="rounded-full w-12">
           <img :src="user.avatar" />
@@ -51,7 +57,7 @@ onUnmounted(() => {
         {{ user.name }}
       </span>
     </div>
-    <div class="grow p-2">
+    <div class="grow p-2 h-screen overflow-y-scroll" ref="messagesContainer">
       <div v-for="message in messages">
         <div
           class="chat"
@@ -66,7 +72,7 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
-    <div class="glass p-4 gap-4">
+    <div class="glass p-4 gap-4 z-10">
       <form @submit.prevent="submit()">
         <div class="join w-full">
           <input

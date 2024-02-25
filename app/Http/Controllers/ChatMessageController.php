@@ -46,7 +46,7 @@ class ChatMessageController extends Controller
     $message->room_id = $chat_room->id;
     $message->content = $request->content;
     $message->save();
-    broadcast(new SendMessage($message))->toOthers();
+    event(new SendMessage($message));
     return response()->json(new ChatMessageResource($message), 201);
   }
 
