@@ -13,6 +13,7 @@ class ChatRoom extends Model
   protected $fillable = [
     'user1_id',
     'user2_id',
+    'updated_at',
   ];
 
   public function user1(): BelongsTo

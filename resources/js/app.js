@@ -2,6 +2,7 @@ import { createApp, h } from 'vue'
 import { createInertiaApp, Link } from '@inertiajs/vue3'
 import Default from './Layouts/Default.vue'
 import './bootstrap'
+import '../css/app.css'
 
 createInertiaApp({
   resolve: (name) => {

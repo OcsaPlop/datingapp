@@ -39,6 +39,7 @@ Route::middleware(['auth:web'])->group(function () {
     $auth = Auth::user();
     $rooms = ChatRoom::where('user1_id', $auth->id)
       ->orWhere('user2_id', $auth->id)
+      ->orderByDesc('updated_at')
       ->get();
     return Inertia::render('Index', [
       'rooms' => ChatRoomResource::collection($rooms),
@@ -55,9 +56,12 @@ Route::middleware(['auth:web'])->group(function () {
       $oppositeGenderUser = User::where('gender', '!=', $user->gender)
         ->inRandomOrder()
         ->first();
+      if (!$oppositeGenderUser) {
+        return Inertia::location('/');
+      }
       return Inertia::render('Search', ['user' => new UserResource($oppositeGenderUser)]);
     }
-    return redirect('/profile');
+    return Inertia::location('/profile');
   });
   Route::get('/{username}', [ChatMessageController::class, 'receiveMessage']);
   Route::post('/send/{username}', [ChatMessageController::class, 'sendMessage']);

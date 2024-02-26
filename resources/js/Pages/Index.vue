@@ -11,7 +11,7 @@ const authId = computed(() => props.auth.user.data.id)
 </script>
 <template>
   <div v-for="room in props.rooms.data">
-    <div class="p-4">
+    <div class="mx-4 mt-4">
       <Link
         :href="
           room.user1.id === authId ? room.user2.username : room.user1.username

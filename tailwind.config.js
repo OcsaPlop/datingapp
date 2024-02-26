@@ -10,8 +10,8 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        guest: "url('http://localhost:8000/guest.jpg')",
-        default: "url('http://localhost:8000/default.png')",
+        guest: "url('/guest.jpg')",
+        default: "url('/default.png')",
       },
     },
   },

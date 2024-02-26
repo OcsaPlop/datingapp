@@ -4,7 +4,7 @@ import axios from 'axios'
 import type { User, Messages, Auth } from '../Types'
 import Send from '../Icons/Send.vue'
 import formatText from '../Utils/formatText'
-import { useDateFormat, useScroll, useWindowScroll } from '@vueuse/core'
+import { useDateFormat, useScroll } from '@vueuse/core'
 
 const props = defineProps<{
   user: User
@@ -19,26 +19,35 @@ const form = reactive({
   content: '',
 })
 
+const isFetching = ref(false)
 const submit = async () => {
   try {
-    const res: any = await axios.post(`/send/${user.value.username}`, form)
-    await messages.value.push(res.data)
+    isFetching.value = true
+    const { data } = await axios.post(`/send/${user.value.username}`, form)
+    await messages.value.push(data)
   } finally {
+    isFetching.value = false
     form.content = ''
+    scrollDown()
   }
 }
 
 const messagesContainer = ref()
 const { y } = useScroll(messagesContainer)
+const scrollDown = () => {
+  y.value =
+    messagesContainer.value.scrollHeight - messagesContainer.value.clientHeight
+}
 onMounted(() => {
-  //@ts-ignore
+  // @ts-ignore
   Echo.private(`chat.${props.auth.user.data.id}`).listen(
     'SendMessage',
     async (e) => {
       await messages.value.push(e.message)
-      y.value = messagesContainer.value.scrollTopMax
+      scrollDown()
     },
   )
+  scrollDown()
 })
 onUnmounted(() => {
   //@ts-ignore

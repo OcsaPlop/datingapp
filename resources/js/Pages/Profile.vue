@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import type { User } from '../Types'
-import { useForm } from '@inertiajs/vue3'
 import { ref, computed } from 'vue'
 import { useToggle, useDateFormat } from '@vueuse/core'
 import Location from '../Icons/Location.vue'
@@ -15,10 +14,10 @@ import Person from '../Icons/Person.vue'
 import Religion from '../Icons/Religion.vue'
 import Love from '../Icons/Love.vue'
 import formatText from '../Utils/formatText'
+import { useForm } from '@inertiajs/vue3'
 const props = defineProps<{
   user: User
 }>()
-
 const user = computed(() => props.user.data)
 
 const form: any = useForm({
@@ -57,226 +56,231 @@ const openfileInputEl = () => {
 }
 </script>
 <template>
-  <div class="flex justify-around items-center h-full">
-    <div class="card card-compact w-96 shrink-0 shadow-xl glass">
-      <div class="card-body space-y-2">
-        <template v-if="!isEditing">
-          <div class="avatar">
-            <div class="rounded-xl w-96">
-              <img :src="user.avatar" />
-            </div>
-          </div>
-          <span
-            class="input flex items-center justify-center font-semibold text-xl"
-          >
-            {{ user.name }}
-          </span>
-          <label class="input input-bordered flex items-center gap-2">
-            <Location />
-            <span class="grow">{{ user.address || 'Alamat' }}</span>
-          </label>
-          <label class="input input-bordered flex items-center gap-2">
-            <template v-if="user.gender === 'L'">
-              <Male />
-              <span class="grow">Laki-laki</span>
-            </template>
-            <template v-else-if="user.gender === 'P'">
-              <Female />
-              <span class="grow">Perempuan</span>
+  <div class="overflow-y-scroll h-screen">
+    <div class="flex justify-center my-8">
+      <div class="card card-compact w-[32rem]">
+        <div class="flex card-body glass rounded-xl">
+          <div class="space-y-2">
+            <template v-if="!isEditing">
+              <div class="avatar w-full">
+                <div class="rounded-xl w-full">
+                  <img :src="user.avatar" />
+                </div>
+              </div>
+              <span
+                class="input flex items-center justify-center font-semibold text-xl"
+              >
+                {{ user.name }}
+              </span>
+              <label class="input input-bordered flex items-center gap-2">
+                <Location />
+                <span class="grow">{{ user.address || 'Alamat' }}</span>
+              </label>
+              <label class="input input-bordered flex items-center gap-2">
+                <template v-if="user.gender === 'L'">
+                  <Male />
+                  <span class="grow">Laki-laki</span>
+                </template>
+                <template v-else-if="user.gender === 'P'">
+                  <Female />
+                  <span class="grow">Perempuan</span>
+                </template>
+                <template v-else>
+                  <span class="text-sm"> Jenis kelamin </span>
+                </template>
+              </label>
+              <label class="input input-bordered flex items-center gap-2">
+                <Calender />
+                <span class="grow">{{
+                  user.birth
+                    ? useDateFormat(user.birth, 'D MMM YYYY').value
+                    : 'Tanggal lahir'
+                }}</span>
+              </label>
+              <label class="input input-bordered flex items-center gap-2">
+                <Person />
+                <span class="grow">{{ user.username || 'Username' }}</span>
+              </label>
+              <label class="input input-bordered flex items-center gap-2">
+                <Height />
+                <span class="grow">{{
+                  user.height ? user.height + ' cm' : 'Tinggi badan'
+                }}</span>
+              </label>
+              <label class="input input-bordered flex items-center gap-2">
+                <Weight />
+                <span class="grow">{{
+                  user.weight ? user.weight + ' kg' : 'Berat badan'
+                }}</span>
+              </label>
+              <label class="input input-bordered flex items-center gap-2">
+                <Email />
+                <span class="grow">{{ user.email }} </span>
+              </label>
+              <label class="input input-bordered flex items-center gap-2">
+                <Contact />
+                <span class="grow"
+                  >{{ user.phoneNumber || 'Nomor telepon' }}
+                </span>
+              </label>
+              <label class="input input-bordered flex items-center gap-2">
+                <Religion />
+                <span class="grow">{{ user.religion || 'Agama' }} </span>
+              </label>
+              <label class="input input-bordered flex items-center gap-2">
+                <Love />
+                <span class="grow"
+                  >{{ user.loveLanguage || 'Bahasa cinta' }}
+                </span>
+              </label>
+              <div
+                class="textarea textarea-bordered"
+                v-html="formatText(user.bio)"
+                v-if="user.bio"
+              />
+              <div class="textarea textarea-bordered h-52" v-else>Bio</div>
+              <button
+                class="btn btn-primary mt-4 w-full"
+                @click="toggleEditing()"
+              >
+                Edit
+              </button>
             </template>
             <template v-else>
-              <span class="text-sm"> Jenis kelamin </span>
+              <div class="avatar" @click="openfileInputEl()">
+                <div class="rounded-xl w-96">
+                  <img :src="imagePreviewUrl" />
+                </div>
+              </div>
+              <input
+                type="file"
+                ref="fileInputEl"
+                @change="handleFileInput()"
+                accept=".jpg, .jpeg, .png, .webp"
+                class="hidden"
+              />
+              <input
+                class="input input-primary w-full"
+                v-model="form.name"
+                placeholder="Nama"
+              />
+              <label class="input input-primary flex items-center gap-2">
+                <Location />
+                <input
+                  type="text"
+                  class="grow"
+                  v-model="form.address"
+                  placeholder="Alamat"
+                />
+              </label>
+              <select
+                class="select select-bordered select-primary w-full"
+                v-model="form.gender"
+              >
+                <option disabled selected value="">Jenis kelamin</option>
+                <option value="L">Laki-laki</option>
+                <option value="P">Perempuan</option>
+              </select>
+              <label class="input input-primary flex items-center gap-2">
+                <Calender />
+                <input type="date" class="grow" v-model="form.birth" />
+              </label>
+              <label class="input input-primary flex items-center gap-2">
+                <Person />
+                <input
+                  type="text"
+                  class="grow"
+                  v-model="form.username"
+                  placeholder="Username"
+                />
+              </label>
+              <label class="input input-primary flex items-center gap-2">
+                <Height />
+                <input
+                  type="text"
+                  class="grow"
+                  v-model="form.height"
+                  placeholder="Tinggi badan"
+                />
+                cm
+              </label>
+              <label class="input input-primary flex items-center gap-2">
+                <Weight />
+                <input
+                  type="text"
+                  class="grow"
+                  v-model="form.weight"
+                  placeholder="Berat badan"
+                />kg
+              </label>
+              <label
+                class="input input-primary input-disabled flex items-center gap-2"
+              >
+                <Email />
+                <input
+                  disabled
+                  type="text"
+                  class="grow input-disabled"
+                  v-model="user.email"
+                  placeholder="Email"
+                />
+              </label>
+              <label class="input input-primary flex items-center gap-2">
+                <Contact />
+                <input
+                  type="text"
+                  class="grow"
+                  v-model="form.phoneNumber"
+                  placeholder="Nomor telepon"
+                />
+              </label>
+              <label class="input input-primary flex items-center gap-2">
+                <Religion />
+                <input
+                  type="text"
+                  class="grow"
+                  v-model="form.religion"
+                  placeholder="Agama"
+                />
+              </label>
+              <label class="input input-primary flex items-center gap-2">
+                <Love />
+                <input
+                  type="text"
+                  class="grow"
+                  v-model="form.loveLanguage"
+                  placeholder="Love language"
+                />
+              </label>
+              <textarea
+                v-model="form.bio"
+                class="textarea resize-none h-52 textarea-primary w-full"
+                placeholder="Bio"
+              />
+              <div class="join flex mt-4">
+                <button
+                  class="btn btn-error join-item w-1/2"
+                  @click="
+                    toggleEditing(),
+                      (imagePreviewUrl = user.avatar),
+                      form.reset()
+                  "
+                >
+                  Batal
+                </button>
+                <button
+                  class="btn btn-primary join-item w-1/2"
+                  @click="toggleEditing(), form.post('update')"
+                  :disabled="form.processing"
+                >
+                  Simpan
+                </button>
+              </div>
             </template>
-          </label>
-          <label class="input input-bordered flex items-center gap-2">
-            <Calender />
-            <span class="grow">{{
-              user.birth
-                ? useDateFormat(user.birth, 'D MMM YYYY').value
-                : 'Tanggal lahir'
-            }}</span>
-          </label>
-          <button class="btn btn-primary mt-4" @click="toggleEditing()">
-            Edit
-          </button>
-        </template>
-        <template v-else>
-          <div class="avatar" @click="openfileInputEl()">
-            <div class="rounded-xl w-96">
-              <img :src="imagePreviewUrl" />
-            </div>
           </div>
-          <input
-            type="file"
-            ref="fileInputEl"
-            @change="handleFileInput()"
-            accept=".jpg, .jpeg, .png, .webp"
-            class="hidden"
-          />
-          <input
-            class="input input-primary"
-            v-model="form.name"
-            placeholder="Nama"
-          />
-          <label class="input input-primary flex items-center gap-2">
-            <Location />
-            <input
-              type="text"
-              class="grow"
-              v-model="form.address"
-              placeholder="Alamat"
-            />
-          </label>
-          <select
-            class="select select-bordered select-primary w-full"
-            v-model="form.gender"
-          >
-            <option disabled selected value="">Jenis kelamin</option>
-            <option value="L">Laki-laki</option>
-            <option value="P">Perempuan</option>
-          </select>
-          <label class="input input-primary flex items-center gap-2">
-            <Calender />
-            <input type="date" class="grow" v-model="form.birth" />
-          </label>
-          <div class="join flex mt-4">
-            <button
-              class="btn btn-error join-item w-1/2"
-              @click="
-                form.reset(), toggleEditing(), (imagePreviewUrl = user.avatar)
-              "
-            >
-              Batal
-            </button>
-            <button
-              class="btn btn-primary join-item w-1/2"
-              @click="toggleEditing(), form.post('/update')"
-              :disabled="form.processing"
-            >
-              Simpan
-            </button>
-          </div>
-        </template>
-      </div>
-    </div>
-    <div class="card card-compact w-96 shadow-xl glass">
-      <div class="card-body space-y-2 my-1">
-        <template v-if="!isEditing">
-          <label class="input input-bordered flex items-center gap-2">
-            <Person />
-            <span class="grow">{{ user.username || 'Username' }}</span>
-          </label>
-          <label class="input input-bordered flex items-center gap-2">
-            <Height />
-            <span class="grow">{{
-              user.height ? user.height + ' cm' : 'Tinggi badan'
-            }}</span>
-          </label>
-          <label class="input input-bordered flex items-center gap-2">
-            <Weight />
-            <span class="grow">{{
-              user.weight ? user.weight + ' kg' : 'Berat badan'
-            }}</span>
-          </label>
-          <label class="input input-bordered flex items-center gap-2">
-            <Email />
-            <span class="grow">{{ user.email }} </span>
-          </label>
-          <label class="input input-bordered flex items-center gap-2">
-            <Contact />
-            <span class="grow">{{ user.phoneNumber || 'Nomor telepon' }} </span>
-          </label>
-          <label class="input input-bordered flex items-center gap-2">
-            <Religion />
-            <span class="grow">{{ user.religion || 'Agama' }} </span>
-          </label>
-          <label class="input input-bordered flex items-center gap-2">
-            <Love />
-            <span class="grow">{{ user.loveLanguage || 'Bahasa cinta' }} </span>
-          </label>
-          <div
-            class="textarea textarea-bordered"
-            v-html="formatText(user.bio)"
-            v-if="user.bio"
-          />
-          <div class="textarea textarea-bordered h-52" v-else>Bio</div>
-        </template>
-        <template v-else>
-          <label class="input input-primary flex items-center gap-2">
-            <Person />
-            <input
-              type="text"
-              class="grow"
-              v-model="form.username"
-              placeholder="Username"
-            />
-          </label>
-          <label class="input input-primary flex items-center gap-2">
-            <Height />
-            <input
-              type="text"
-              class="grow"
-              v-model="form.height"
-              placeholder="Tinggi badan"
-            />
-            cm
-          </label>
-          <label class="input input-primary flex items-center gap-2">
-            <Weight />
-            <input
-              type="text"
-              class="grow"
-              v-model="form.weight"
-              placeholder="Berat badan"
-            />kg
-          </label>
-          <label
-            class="input input-primary input-disabled flex items-center gap-2"
-          >
-            <Contact />
-            <input
-              disabled
-              type="text"
-              class="grow input-disabled"
-              v-model="user.email"
-              placeholder="Email"
-            />
-          </label>
-          <label class="input input-primary flex items-center gap-2">
-            <Contact />
-            <input
-              type="text"
-              class="grow"
-              v-model="form.phoneNumber"
-              placeholder="Nomor telepon"
-            />
-          </label>
-          <label class="input input-primary flex items-center gap-2">
-            <Religion />
-            <input
-              type="text"
-              class="grow"
-              v-model="form.religion"
-              placeholder="Agama"
-            />
-          </label>
-          <label class="input input-primary flex items-center gap-2">
-            <Love />
-            <input
-              type="text"
-              class="grow"
-              v-model="form.loveLanguage"
-              placeholder="Love language"
-            />
-          </label>
-          <textarea
-            v-model="form.bio"
-            class="textarea resize-none h-52 textarea-primary"
-            placeholder="Bio"
-          />
-        </template>
+          <div class="space-y-2"></div>
+        </div>
       </div>
     </div>
   </div>
 </template>
-../Utils/formatText

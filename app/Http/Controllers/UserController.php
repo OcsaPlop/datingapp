@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateUserRequest;
+use Inertia\Inertia;
 
 class UserController extends Controller
 {
@@ -26,5 +27,6 @@ class UserController extends Controller
       $user->avatar = '/avatar/' . $avatarName . '#' . time();
     }
     $user->save();
+    return Inertia::location('/profile');
   }
 }

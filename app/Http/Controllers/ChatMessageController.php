@@ -8,6 +8,7 @@ use App\Http\Resources\UserResource;
 use App\Models\ChatMessage;
 use App\Models\ChatRoom;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -37,6 +38,7 @@ class ChatMessageController extends Controller
       $chat_room = new ChatRoom;
       $chat_room->user1_id = $user->id;
       $chat_room->user2_id = $receiver->id;
+      $chat_room->updated_at = Carbon::now()->format('Y-m-d H:i:s');
       $chat_room->save();
     }
 
@@ -45,6 +47,8 @@ class ChatMessageController extends Controller
     $message->receiver_id = $receiver->id;
     $message->room_id = $chat_room->id;
     $message->content = $request->content;
+    $chat_room->updated_at = Carbon::now()->format('Y-m-d H:i:s');
+    $chat_room->save();
     $message->save();
     event(new SendMessage($message));
     return response()->json(new ChatMessageResource($message), 201);
