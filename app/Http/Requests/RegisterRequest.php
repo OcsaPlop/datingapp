@@ -37,4 +37,26 @@ class RegisterRequest extends FormRequest
       'student_id' => $this->studentId,
     ]);
   }
+
+  /**
+   * Get the error messages for the defined validation rules.
+   *
+   * @return array<string, string>
+   */
+
+  public function messages(): array
+  {
+    return [
+      'name.required' => 'Mohon isi nama Anda.',
+      'name.regex' => 'Nama hanya boleh berisi huruf dan spasi.',
+      'studentId.required' => 'Mohon isi Nomor Induk Mahasiswa Anda.',
+      'studentId.integer' => 'Nomor Induk Mahasiswa harus berupa bilangan bulat.',
+      'email.required' => 'Mohon isi alamat email Anda.',
+      'email.email' => 'Alamat email Anda tidak valid.',
+      'email.unique' => 'Alamat email ini sudah digunakan. Silakan gunakan alamat email lain.',
+      'password.required' => 'Mohon isi sandi Anda.',
+      'password.min' => 'Sandi Anda harus memiliki minimal :min karakter.',
+    ];
+  }
+
 }

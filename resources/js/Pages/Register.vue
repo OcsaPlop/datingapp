@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useForm } from '@inertiajs/vue3'
-import Guest from '../Layouts/Guest.vue'
+import { ref } from 'vue'
+import Guest from '@/Layouts/Guest.vue'
+import Close from '@/Icons/Close.vue'
 
 const form = useForm({
   name: '',
@@ -12,6 +14,7 @@ const form = useForm({
 defineOptions({
   layout: Guest,
 })
+const errors = ref<string[]>([])
 </script>
 <template>
   <div
@@ -19,11 +22,18 @@ defineOptions({
   >
     <div class="card-body">
       <div class="text-2xl font-semibold text-center">Daftar</div>
-      <form @submit.prevent="form.post('/register')">
+      <form
+        @submit.prevent="
+          form.post('/register', {
+            onStart: () => (errors = []),
+            onError: () => errors.push(...Object.values(form.errors)),
+          })
+        "
+      >
         <div class="relative group mt-4">
           <input
-            type="text"
             required
+            type="text"
             class="peer flex mt-2 input w-full"
             v-model="form.name"
           />
@@ -34,8 +44,8 @@ defineOptions({
         </div>
         <div class="relative group mt-8">
           <input
-            type="text"
             required
+            type="text"
             class="peer flex mt-2 input w-full"
             v-model="form.studentId"
           />
@@ -46,8 +56,8 @@ defineOptions({
         </div>
         <div class="relative group mt-8">
           <input
-            type="text"
             required
+            type="text"
             class="peer flex mt-2 input w-full"
             v-model="form.email"
           />
@@ -58,8 +68,8 @@ defineOptions({
         </div>
         <div class="relative group mt-8">
           <input
-            type="password"
             required
+            type="password"
             class="peer flex mt-2 input w-full"
             v-model="form.password"
           />
@@ -79,6 +89,21 @@ defineOptions({
       <div>
         Sudah memiliki akun?
         <Link href="/login" class="text-blue-400 link-hover">Masuk</Link>
+      </div>
+    </div>
+  </div>
+  <div class="toast toast-end z-10">
+    <div
+      class="alert alert-error flex justify-between"
+      v-for="(error, index) in errors"
+      :key="index"
+    >
+      <span>{{ error }}</span>
+      <div
+        class="btn btn-xs btn-circle btn-ghost"
+        @click="() => errors.splice(index, 1)"
+      >
+        <Close />
       </div>
     </div>
   </div>

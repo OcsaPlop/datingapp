@@ -1,26 +1,28 @@
 <script setup lang="ts">
-import type { User } from '../Types'
+import type { User } from '@/Types'
 import { ref, computed } from 'vue'
 import { useToggle, useDateFormat } from '@vueuse/core'
-import Location from '../Icons/Location.vue'
-import Male from '../Icons/Male.vue'
-import Female from '../Icons/Female.vue'
-import Calender from '../Icons/Calender.vue'
-import Height from '../Icons/Height.vue'
-import Weight from '../Icons/Weight.vue'
-import Contact from '../Icons/Contact.vue'
-import Email from '../Icons/Email.vue'
-import Person from '../Icons/Person.vue'
-import Religion from '../Icons/Religion.vue'
-import Love from '../Icons/Love.vue'
-import formatText from '../Utils/formatText'
-import { useForm } from '@inertiajs/vue3'
+import Location from '@/Icons/Location.vue'
+import Male from '@/Icons/Male.vue'
+import Female from '@/Icons/Female.vue'
+import Calender from '@/Icons/Calender.vue'
+import Height from '@/Icons/Height.vue'
+import Weight from '@/Icons/Weight.vue'
+import Contact from '@/Icons/Contact.vue'
+import Email from '@/Icons/Email.vue'
+import Person from '@/Icons/Person.vue'
+import Religion from '@/Icons/Religion.vue'
+import Love from '@/Icons/Love.vue'
+import formatText from '@/Utils/formatText'
+import { useForm, type InertiaForm } from '@inertiajs/vue3'
+import Close from '@/Icons/Close.vue'
 const props = defineProps<{
-  user: User
+  user: { data: User }
+  errors: string[]
 }>()
 const user = computed(() => props.user.data)
 
-const form: any = useForm({
+const form: InertiaForm<User> = useForm({
   name: user.value.name,
   address: user.value.address,
   gender: user.value.gender ? user.value.gender : '',
@@ -31,7 +33,7 @@ const form: any = useForm({
   username: user.value.username,
   religion: user.value.religion,
   loveLanguage: user.value.loveLanguage,
-  avatar: null,
+  avatar: '',
   bio: user.value.bio,
 })
 
@@ -44,16 +46,19 @@ const handleFileInput = () => {
       fileInputEl.value?.files[0].type,
     )
   ) {
-    return console.error('File format not supported')
+    return errors.value.push('Format avatar harus jpeg, png, jpg, atau webp.')
   }
 
   form.avatar = fileInputEl.value?.files[0]
-  imagePreviewUrl.value = URL.createObjectURL(form.avatar)
+  imagePreviewUrl.value = URL.createObjectURL(fileInputEl.value?.files[0])
 }
 
 const openfileInputEl = () => {
   fileInputEl.value.click()
 }
+// console.log(props.errors[0])
+const errors = ref<string[]>([])
+props.errors ? errors.value.push(...Object.values(props.errors)) : ''
 </script>
 <template>
   <div class="overflow-y-scroll h-screen">
@@ -147,8 +152,11 @@ const openfileInputEl = () => {
               </button>
             </template>
             <template v-else>
-              <div class="avatar" @click="openfileInputEl()">
-                <div class="rounded-xl w-96">
+              <div
+                class="avatar w-full cursor-pointer"
+                @click="openfileInputEl()"
+              >
+                <div class="rounded-xl w-full">
                   <img :src="imagePreviewUrl" />
                 </div>
               </div>
@@ -270,7 +278,17 @@ const openfileInputEl = () => {
                 </button>
                 <button
                   class="btn btn-primary join-item w-1/2"
-                  @click="toggleEditing(), form.post('update')"
+                  @click="
+                    toggleEditing(),
+                      form.post('update', {
+                        onStart: () => (errors = []),
+                        onError: () => {
+                          errors.push(...Object.values(form.errors))
+                          isEditing = true
+                        },
+                        preserveScroll: true,
+                      })
+                  "
                   :disabled="form.processing"
                 >
                   Simpan
@@ -280,6 +298,21 @@ const openfileInputEl = () => {
           </div>
           <div class="space-y-2"></div>
         </div>
+      </div>
+    </div>
+  </div>
+  <div class="toast toast-end z-10">
+    <div
+      class="alert alert-error flex justify-between"
+      v-for="(error, index) in errors"
+      :key="index"
+    >
+      <span>{{ error }}</span>
+      <div
+        class="btn btn-xs btn-circle btn-ghost"
+        @click="() => errors.splice(index, 1)"
+      >
+        <Close />
       </div>
     </div>
   </div>

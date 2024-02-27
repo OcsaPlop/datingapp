@@ -57,11 +57,11 @@ Route::middleware(['auth:web'])->group(function () {
         ->inRandomOrder()
         ->first();
       if (!$oppositeGenderUser) {
-        return Inertia::location('/');
+        return redirect('/');
       }
       return Inertia::render('Search', ['user' => new UserResource($oppositeGenderUser)]);
     }
-    return Inertia::location('/profile');
+    return redirect('/profile')->withErrors('Mohon isi biodata Anda terlebih dahulu.');
   });
   Route::get('/{username}', [ChatMessageController::class, 'receiveMessage']);
   Route::post('/send/{username}', [ChatMessageController::class, 'sendMessage']);

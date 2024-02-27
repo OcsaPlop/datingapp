@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import type { User } from '../Types'
+import type { User } from '@/Types'
 import { computed } from 'vue'
-import Location from '../Icons/Location.vue'
-import Male from '../Icons/Male.vue'
-import Female from '../Icons/Female.vue'
-import Height from '../Icons/Height.vue'
-import Weight from '../Icons/Weight.vue'
-import Person from '../Icons/Person.vue'
-import Religion from '../Icons/Religion.vue'
-import Love from '../Icons/Love.vue'
-import X from '../Icons/X.vue'
-import Heart from '../Icons/Heart.vue'
-import formatText from '../Utils/formatText'
+import Location from '@/Icons/Location.vue'
+import Male from '@/Icons/Male.vue'
+import Female from '@/Icons/Female.vue'
+import Height from '@/Icons/Height.vue'
+import Weight from '@/Icons/Weight.vue'
+import Person from '@/Icons/Person.vue'
+import Religion from '@/Icons/Religion.vue'
+import Love from '@/Icons/Love.vue'
+import X from '@/Icons/X.vue'
+import Heart from '@/Icons/Heart.vue'
+import formatText from '@/Utils/formatText'
 const props = defineProps<{
-  user: User
+  user: { data: User }
 }>()
 
 const user = computed(() => props.user.data)
@@ -89,7 +89,12 @@ const user = computed(() => props.user.data)
       >
         <div class="card-body">
           <div class="flex gap-8 justify-around">
-            <Link class="btn btn-circle h-32 w-32 p-6" href="" as="button">
+            <Link
+              class="btn btn-circle h-32 w-32 p-6"
+              href=""
+              as="button"
+              preserve-scroll
+            >
               <X />
             </Link>
             <Link

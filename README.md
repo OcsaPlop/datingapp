@@ -15,3 +15,11 @@ To this
 $conf[\CURLOPT_SSL_VERIFYHOST] = 0;
 $conf[\CURLOPT_SSL_VERIFYPEER] = false;
 ```
+
+### at /resources/views/app.blade.php
+
+Comment this line when developing
+
+```
+<meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+```

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import ChevronRight from '../Icons/ChevronRight.vue'
+import ChevronRight from '@/Icons/ChevronRight.vue'
 </script>
 <template>
   <div class="drawer xl:drawer-open bg-default bg-cover h-screen">
@@ -7,7 +7,7 @@ import ChevronRight from '../Icons/ChevronRight.vue'
     <div class="drawer-content w-full">
       <label
         for="drawer"
-        class="drawer-button xl:hidden absolute z-50 top-1/2 -translate-y-1/2 p-2 ml-1 hover:bg-white/20 rounded-full"
+        class="drawer-button xl:hidden absolute z-50 top-1/2 ml-2 p-2 bg-black/75 rounded-full hover:bg-black/50 duration-300 ease-out"
         ><ChevronRight
       /></label>
       <slot />
@@ -55,3 +55,8 @@ import ChevronRight from '../Icons/ChevronRight.vue'
     </div>
   </div>
 </template>
+<style scoped>
+.drawer-toggle:checked ~ .drawer-content > .drawer-button {
+  transform: translateX(20rem) rotate(180deg);
+}
+</style>

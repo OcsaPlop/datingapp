@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { computed, ref, reactive, onMounted, onUnmounted } from 'vue'
 import axios from 'axios'
-import type { User, Messages, Auth } from '../Types'
-import Send from '../Icons/Send.vue'
-import formatText from '../Utils/formatText'
+import type { User, Message } from '@/Types'
+import Send from '@/Icons/Send.vue'
+import formatText from '@/Utils/formatText'
 import { useDateFormat, useScroll } from '@vueuse/core'
 
 const props = defineProps<{
-  user: User
-  messages: Messages
-  auth: Auth
+  user: { data: User }
+  messages: { data: Message[] }
+  auth: { user: { data: User } }
 }>()
 
 const user = computed(() => props.user.data)
@@ -33,7 +33,7 @@ const submit = async () => {
 }
 
 const messagesContainer = ref()
-const { y } = useScroll(messagesContainer)
+const { y } = useScroll(messagesContainer, { behavior: 'smooth' })
 const scrollDown = () => {
   y.value =
     messagesContainer.value.scrollHeight - messagesContainer.value.clientHeight
@@ -85,11 +85,12 @@ onUnmounted(() => {
       <form @submit.prevent="submit()">
         <div class="join w-full">
           <input
-            class="input join-item w-full"
+            class="input join-item w-full focus:outline-none disabled:cursor-progress"
             placeholder="Ketik pesan"
             v-model="form.content"
+            :disabled="isFetching"
           />
-          <button class="btn join-item"><Send /></button>
+          <button class="btn join-item" :disabled="isFetching"><Send /></button>
         </div>
       </form>
     </div>

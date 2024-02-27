@@ -14,14 +14,14 @@ class AuthController extends Controller
   {
     $user = User::create($request->all());
     Auth::login($user);
-    return Inertia::location('/profile');
+    return redirect('/profile');
   }
 
   public function login(LoginRequest $request)
   {
     if (Auth::attempt($request->all())) {
       $request->session()->regenerate();
-      return Inertia::location('/');
+      return redirect('/');
     }
 
     return Inertia::location('https://www.youtube.com/watch?v=UIp6_0kct_U');
@@ -30,6 +30,6 @@ class AuthController extends Controller
   public function logout()
   {
     Auth::logout();
-    return Inertia::location('/login');
+    return redirect('/login');
   }
 }

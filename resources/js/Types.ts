@@ -1,10 +1,5 @@
-export interface User extends UserType {
-  data: UserType
-  value: UserType
-}
-
-interface UserType {
-  id: number
+export interface User {
+  id?: number
   name: string
   username: string
   address: string
@@ -12,7 +7,7 @@ interface UserType {
   weight: number
   gender: string
   birth: Date
-  email: string
+  email?: string
   phoneNumber: number
   avatar: string
   religion: string
@@ -20,22 +15,8 @@ interface UserType {
   bio: string
 }
 
-export interface Message extends MessageType {
-  data: MessageType
-  value: MessageType
-}
-
-export interface Messages {
-  data: Message[]
-  value: Message[]
-}
-
-interface MessageType {
+export interface Message {
   content: string
   senderId: number
   createdAt: Date
-}
-
-export interface Auth {
-  user: User
 }

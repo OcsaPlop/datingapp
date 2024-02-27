@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { Auth } from '../Types'
+import type { User } from '@/Types'
 
 const props = defineProps<{
   rooms
-  auth: Auth
+  auth: { user: { data: User } }
 }>()
 
 const authId = computed(() => props.auth.user.data.id)

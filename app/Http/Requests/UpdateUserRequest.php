@@ -45,4 +45,30 @@ class UpdateUserRequest extends FormRequest
       'love_language' => $this->loveLanguage,
     ]);
   }
+
+  /**
+   * Get the error messages for the defined validation rules.
+   *
+   * @return array<string, string>
+   */
+  public function messages(): array
+  {
+    return [
+      'name.required' => 'Mohon isi nama Anda.',
+      'name.regex' => 'Nama hanya boleh berisi huruf dan spasi.',
+      'address.required' => 'Mohon isi alamat Anda.',
+      'gender.required' => 'Mohon pilih jenis kelamin Anda.',
+      'gender.in' => 'Jenis kelamin harus diisi dengan "L" atau "P".',
+      'birth.required' => 'Mohon isi tanggal lahir Anda.',
+      'height.required' => 'Mohon isi tinggi badan Anda.',
+      'weight.required' => 'Mohon isi berat badan Anda.',
+      'phoneNumber.required' => 'Mohon isi nomor telepon Anda.',
+      'username.required' => 'Mohon isi nama pengguna Anda.',
+      'username.unique' => 'Nama pengguna ini sudah digunakan. Silakan pilih nama pengguna lain.',
+      'religion.required' => 'Mohon pilih agama Anda.',
+      'loveLanguage.required' => 'Mohon pilih bahasa cinta Anda.',
+      'avatar.mimes' => 'Format avatar harus jpeg, png, jpg, atau webp.',
+      'avatar.max' => 'Ukuran avatar tidak boleh lebih dari 2MB.',
+    ];
+  }
 }
