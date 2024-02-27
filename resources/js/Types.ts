@@ -20,3 +20,8 @@ export interface Message {
   senderId: number
   createdAt: Date
 }
+
+export interface Room {
+  user1: User
+  user2: User
+}

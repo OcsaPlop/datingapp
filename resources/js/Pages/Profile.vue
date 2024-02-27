@@ -22,7 +22,8 @@ const props = defineProps<{
 }>()
 const user = computed(() => props.user.data)
 
-const form: InertiaForm<User> = useForm({
+type Form = Omit<User, 'avatar'> & { avatar: string | Blob }
+const form: InertiaForm<Form> = useForm({
   name: user.value.name,
   address: user.value.address,
   gender: user.value.gender ? user.value.gender : '',
@@ -38,25 +39,32 @@ const form: InertiaForm<User> = useForm({
 })
 
 const [isEditing, toggleEditing] = useToggle(false)
-const fileInputEl = ref<any>()
+const fileInputEl = ref<HTMLElement>()
 const imagePreviewUrl = ref<string>(user.value.avatar)
 const handleFileInput = () => {
   if (
-    !['image/png', 'image/jpeg', 'image/webp'].includes(
-      fileInputEl.value?.files[0].type,
-    )
+    fileInputEl.value instanceof HTMLInputElement &&
+    fileInputEl.value.files
   ) {
-    return errors.value.push('Format avatar harus jpeg, png, jpg, atau webp.')
-  }
+    const selectedFile: Blob = fileInputEl.value.files[0]
+    if (
+      !['image/png', 'image/jpeg', 'image/webp'].includes(
+        fileInputEl.value?.files[0].type,
+      )
+    ) {
+      return errors.value.push('Format avatar harus jpeg, png, jpg, atau webp.')
+    }
 
-  form.avatar = fileInputEl.value?.files[0]
-  imagePreviewUrl.value = URL.createObjectURL(fileInputEl.value?.files[0])
+    form.avatar = selectedFile
+    imagePreviewUrl.value = URL.createObjectURL(selectedFile)
+  }
 }
 
 const openfileInputEl = () => {
-  fileInputEl.value.click()
+  if (fileInputEl.value) {
+    fileInputEl.value.click()
+  }
 }
-// console.log(props.errors[0])
 const errors = ref<string[]>([])
 props.errors ? errors.value.push(...Object.values(props.errors)) : ''
 </script>

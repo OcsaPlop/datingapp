@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { User } from '@/Types'
+import type { User, Room } from '@/Types'
 
 const props = defineProps<{
-  rooms
+  rooms: { data: Room[] }
   auth: { user: { data: User } }
 }>()
 

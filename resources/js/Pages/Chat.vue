@@ -23,7 +23,10 @@ const isFetching = ref(false)
 const submit = async () => {
   try {
     isFetching.value = true
-    const { data } = await axios.post(`/send/${user.value.username}`, form)
+    const { data } = await axios.post<Message>(
+      `/send/${user.value.username}`,
+      form,
+    )
     await messages.value.push(data)
   } finally {
     isFetching.value = false
@@ -32,14 +35,18 @@ const submit = async () => {
   }
 }
 
-const messagesContainer = ref()
+const messagesContainer = ref<HTMLElement | null>(null)
 const { y } = useScroll(messagesContainer, { behavior: 'smooth' })
 const scrollDown = () => {
-  y.value =
-    messagesContainer.value.scrollHeight - messagesContainer.value.clientHeight
+  if (messagesContainer.value) {
+    y.value =
+      messagesContainer.value.scrollHeight -
+      messagesContainer.value.clientHeight
+  }
 }
+
+declare const Echo
 onMounted(() => {
-  // @ts-ignore
   Echo.private(`chat.${props.auth.user.data.id}`).listen(
     'SendMessage',
     async (e) => {
@@ -50,7 +57,6 @@ onMounted(() => {
   scrollDown()
 })
 onUnmounted(() => {
-  //@ts-ignore
   Echo.leave(`chat.${props.auth.user.data.id}`)
 })
 </script>
