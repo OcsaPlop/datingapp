@@ -18,7 +18,7 @@ import { useForm, type InertiaForm } from '@inertiajs/vue3'
 import Close from '@/Icons/Close.vue'
 const props = defineProps<{
   user: { data: User }
-  errors: string[]
+  errors: User
 }>()
 const user = computed(() => props.user.data)
 

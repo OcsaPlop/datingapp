@@ -8,6 +8,7 @@
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   @vite('resources/js/app.js')
   @inertiaHead
+  <title>A'more</title>
 </head>
 
 <body>
